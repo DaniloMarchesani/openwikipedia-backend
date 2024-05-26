@@ -5,16 +5,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 
-@Document("users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "users")
 public class User {
 
     @Id
@@ -36,8 +39,8 @@ public class User {
     @Email
     private String email;
 
-    private LocalDate createdAt;
-    private boolean isEnabled;
-
+    private Date createdAt = new Date();
+    private boolean isEnabled = true;
+    @DBRef
     private Set<Role> roles;
 }
