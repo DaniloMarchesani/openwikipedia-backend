@@ -22,6 +22,10 @@ public class UserDetailsImpl implements UserDetails {
 
     private String username;
 
+    private String firstname;
+
+    private String lastname;
+
     @JsonIgnore
     private String password;
 
@@ -29,12 +33,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends  GrantedAuthority> authorities;
 
+
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream().map( role -> new SimpleGrantedAuthority(role.getRole().name())).collect(Collectors.toList());
 
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
+                user.getFirstname(),
+                user.getLastname(),
                 user.getEmail(),
                 user.getPassword(),
                 authorities

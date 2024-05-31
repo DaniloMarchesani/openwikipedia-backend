@@ -32,7 +32,7 @@ public class User {
 
     private String firstname;
     private String lastname;
-
+    @DBRef
     private Address address;
 
     @NotBlank

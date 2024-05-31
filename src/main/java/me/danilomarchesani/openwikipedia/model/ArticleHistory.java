@@ -4,18 +4,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
-
+@Document(collection = "articles_history")
+public class ArticleHistory {
     @Id
     private String id;
 
-    private String city;
-    private String address;
-    private String houseNumber;
-    private String postalCode;
+    @DBRef
+    private Article article;
+
+    @DBRef
+    private User modifiedByUser;
+    private Date modifiedAt;
+    private String previousContentState;
+
 }

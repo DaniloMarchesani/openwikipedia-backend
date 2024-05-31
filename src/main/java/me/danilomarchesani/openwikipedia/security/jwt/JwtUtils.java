@@ -26,7 +26,7 @@ public class JwtUtils {
 
     private final SecretKeySpec secretKeySpec = new SecretKeySpec(jwtSecret.getBytes(), SignatureAlgorithm.ES512.getJcaName());
 
-    private String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()

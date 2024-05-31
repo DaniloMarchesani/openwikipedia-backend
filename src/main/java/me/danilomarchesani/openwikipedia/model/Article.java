@@ -6,16 +6,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
+@Document(collection = "articles")
+public class Article {
 
     @Id
     private String id;
 
-    private String city;
-    private String address;
-    private String houseNumber;
-    private String postalCode;
+    private String title;
+    private String content;
+    private Date savedOnDate;
+    private Date lastModifiedDate;
+
 }
