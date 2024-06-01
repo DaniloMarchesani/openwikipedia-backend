@@ -39,4 +39,10 @@ public class UserController {
         userService.updateUser(userUpdated);
         return ResponseEntity.ok("User updated Successfully!");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@Valid @RequestParam String id) throws Exception {
+        userService.deleteUserById(id);
+        return ResponseEntity.ok("User deleted successfully: " + id);
+    }
 }

@@ -93,4 +93,12 @@ public class UserService {
     public boolean checkifEmailExists(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    public void deleteUserById(String id) throws Exception {
+        try{
+            userRepository.deleteById(id);
+        } catch(Exception e) {
+            throw new Exception("Error: " + e.getMessage());
+        }
+    }
 }

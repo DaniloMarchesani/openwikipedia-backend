@@ -36,4 +36,12 @@ public class DailyArticleService {
             throw new Exception("Error occurred: " + e.getMessage());
         }
     }
+
+    public void deleteDailyArticle(String id) throws Exception {
+        try {
+            dailyArticleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
+    }
 }

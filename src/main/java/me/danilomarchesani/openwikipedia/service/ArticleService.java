@@ -17,10 +17,14 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public Article getArticleByTitle(String articleTitle) {
-        Optional<Article> article = articleRepository.findByTitle(articleTitle);
-        if(!article.isPresent()) throw new ArticleNotFoundException("Article with title: " + articleTitle + " Not found!");
-        return article.get();
+    public Article getArticleByTitle(String articleTitle) throws Exception {
+        try{
+            Optional<Article> article = articleRepository.findByTitle(articleTitle);
+            if(!article.isPresent()) throw new ArticleNotFoundException("Article with title: " + articleTitle + " Not found!");
+            return article.get();
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
     }
 
     public Stream<Article> getAllArticlesByTitle(String articleTitle) throws Exception {
@@ -59,7 +63,9 @@ public class ArticleService {
             article.setContent(articleUpdated.getContent());
             article.setLastModifiedDate(new Date());
 
-            return articleRepository.save(article);
+            articleRepository.save(article);
+
+            return article;
         } catch (Exception e) {
             throw new Exception("Error occurred: " + e.getMessage());
         }
@@ -69,6 +75,16 @@ public class ArticleService {
         try {
             if(!articleRepository.existsById(id)) throw new ArticleNotFoundException("No article with id: " + id + " found to delete, sorry!");
             articleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
+    }
+
+    public Article getArticleById(String id) throws Exception {
+        try{
+            Optional<Article> article = articleRepository.findById(id);
+            if(!article.isPresent()) throw new ArticleNotFoundException("Article with id: " + id + " not found");
+            return article.get();
         } catch (Exception e) {
             throw new Exception("Error occurred: " + e.getMessage());
         }
