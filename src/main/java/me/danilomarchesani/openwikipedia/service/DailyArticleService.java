@@ -1,5 +1,6 @@
 package me.danilomarchesani.openwikipedia.service;
 
+import me.danilomarchesani.openwikipedia.errors.DailyArticleNotFoundException;
 import me.danilomarchesani.openwikipedia.model.Article;
 import me.danilomarchesani.openwikipedia.model.DailyArticle;
 import me.danilomarchesani.openwikipedia.repository.DailyArticleRepository;
@@ -15,15 +16,24 @@ public class DailyArticleService {
     @Autowired
     private DailyArticleRepository dailyArticleRepository;
 
-    public DailyArticle saveDailyArticle(Article article) {
-        DailyArticle dArticle = new DailyArticle();
-        dArticle.setArticle(article);
-        dArticle.setTodayDate(new Date());
-        return dArticle;
+    public DailyArticle saveDailyArticle(Article article) throws Exception {
+        try {
+            DailyArticle dArticle = new DailyArticle();
+            dArticle.setArticle(article);
+            dArticle.setTodayDate(new Date());
+            return dArticle;
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
     }
 
-    public Optional<DailyArticle> getTodayArticle(Date date) {
-        Optional<DailyArticle> dArticle = dailyArticleRepository.findByTodayDate(date);
-        return dArticle;
+    public DailyArticle getTodayArticle(Date date) throws Exception {
+        try {
+            Optional<DailyArticle> dArticle = dailyArticleRepository.findByTodayDate(date);
+            if(!dArticle.isPresent()) throw new DailyArticleNotFoundException("Daily article not found!");
+            return dArticle.get();
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
     }
 }

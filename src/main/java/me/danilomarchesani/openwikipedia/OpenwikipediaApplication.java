@@ -5,6 +5,8 @@ import me.danilomarchesani.openwikipedia.model.Role;
 import me.danilomarchesani.openwikipedia.model.User;
 import me.danilomarchesani.openwikipedia.repository.RoleRepository;
 import me.danilomarchesani.openwikipedia.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -17,6 +19,9 @@ import java.util.Set;
 
 @SpringBootApplication
 public class OpenwikipediaApplication implements CommandLineRunner {
+
+	@Autowired
+	private final static Logger logger = LoggerFactory.getLogger(OpenwikipediaApplication.class);
 
 	@Autowired
 	UserRepository userRepository;

@@ -17,39 +17,60 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public Optional<Article> getArticleByTitle(String articleTitle) {
+    public Article getArticleByTitle(String articleTitle) {
         Optional<Article> article = articleRepository.findByTitle(articleTitle);
-        return article;
+        if(!article.isPresent()) throw new ArticleNotFoundException("Article with title: " + articleTitle + " Not found!");
+        return article.get();
     }
 
-    public Stream<Article> getAllArticlesByTitle(String articleTitle) {
-        Set<Article> articles = articleRepository.findManyArticlesByTitle(articleTitle);
-        return articles.stream();
+    public Stream<Article> getAllArticlesByTitle(String articleTitle) throws Exception {
+        try {
+            Set<Article> articles = articleRepository.findManyArticlesByTitle(articleTitle);
+            return articles.stream();
+        } catch (Exception e) {
+            throw new Exception("Error occurred while getting back the articles: " + e.getMessage());
+        }
     }
 
-    public Article save(Article article) {
-        return articleRepository.save(article);
+    public Article save(Article article) throws Exception {
+        try {
+            return articleRepository.save(article);
+        } catch (Exception e) {
+            throw new Exception("Error occurred while saving the article: " + e.getMessage());
+        }
     }
 
-    public List<Article> saveMultiple(List<Article> articles) {
-        return articleRepository.saveAll(articles);
+    public List<Article> saveMultiple(List<Article> articles) throws Exception {
+        try {
+            return articleRepository.saveAll(articles);
+        } catch (Exception e) {
+            throw new Exception("Error occurred while saving the articles: " + e.getMessage());
+        }
     }
 
-    public Article updateArticle(String id, Article articleUpdated) {
-        if(!articleRepository.existsById(id)) throw new ArticleNotFoundException("Article to update with title: " + articleUpdated.getTitle() + " not found.");
+    public Article updateArticle(String id, Article articleUpdated) throws Exception {
+        try {
+            if(!articleRepository.existsById(id)) throw new ArticleNotFoundException("Article to update with title: " + articleUpdated.getTitle() + " not found.");
 
-        Article article = new Article();
-        article.setId(articleUpdated.getId());
-        article.setTitle(articleUpdated.getTitle());
-        article.setSavedOnDate(new Date());
-        article.setContent(articleUpdated.getContent());
-        article.setLastModifiedDate(new Date());
+            Article article = new Article();
+            article.setId(articleUpdated.getId());
+            article.setTitle(articleUpdated.getTitle());
+            article.setSavedOnDate(new Date());
+            article.setContent(articleUpdated.getContent());
+            article.setLastModifiedDate(new Date());
 
-        return articleRepository.save(article);
+            return articleRepository.save(article);
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
     }
 
-    public void deleteArticle(String id) {
-        if(!articleRepository.existsById(id)) throw new ArticleNotFoundException("No article with id: " + id + " found to delete, sorry!");
-        articleRepository.deleteById(id);
+    public void deleteArticle(String id) throws Exception {
+        try {
+            if(!articleRepository.existsById(id)) throw new ArticleNotFoundException("No article with id: " + id + " found to delete, sorry!");
+            articleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
     }
 }

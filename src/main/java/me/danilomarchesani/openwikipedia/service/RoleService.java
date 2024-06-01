@@ -1,5 +1,6 @@
 package me.danilomarchesani.openwikipedia.service;
 
+import me.danilomarchesani.openwikipedia.errors.RoleNotFoundException;
 import me.danilomarchesani.openwikipedia.model.ERole;
 import me.danilomarchesani.openwikipedia.model.Role;
 import me.danilomarchesani.openwikipedia.model.User;
@@ -51,14 +52,22 @@ public class RoleService {
      * @param user
      * @author Danilo M. 31/05/2024
      */
-    public void removeARoleToAUser(Role role, User user) {
-        Set<Role> userRoles = user.getRoles();
-        userRoles.remove(role);
-        user.setRoles(userRoles);
-        userRepository.save(user);
+    public void removeARoleToAUser(Role role, User user) throws Exception {
+        try {
+            Set<Role> userRoles = user.getRoles();
+            userRoles.remove(role);
+            user.setRoles(userRoles);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
     }
 
-    public Role findByRole(ERole eRole) {
-        return roleRepository.findByRole(eRole);
+    public Role findByRole(ERole eRole) throws RoleNotFoundException {
+        try {
+            return roleRepository.findByRole(eRole);
+        } catch (RoleNotFoundException e) {
+            throw new RoleNotFoundException("role not found: " + e.getMessage());
+        }
     }
 }

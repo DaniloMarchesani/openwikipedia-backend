@@ -122,6 +122,8 @@ public class AuthController {
             return ResponseEntity.ok("User registered successfully!");
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
