@@ -35,11 +35,24 @@ public class OpenwikipediaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		if(userRepository.findAll().isEmpty()){
 
+		if(roleRepository.findAll().isEmpty()){
 			Role r_user = new Role();
-			r_user.setId("2");
 			r_user.setRole(ERole.ROLE_USER);
+
+			Role r_admin = new Role();
+			r_admin.setRole(ERole.ROLE_ADMIN);
+
+			Role r_author = new Role();
+			r_author.setRole(ERole.ROLE_AUTHOR);
+
+			roleRepository.save(r_user);
+			roleRepository.save(r_admin);
+			roleRepository.save(r_author);
+		}
+
+
+		if(userRepository.findAll().isEmpty()){
 
 			User user = new User();
 			user.setEmail("danilom@hotmail.com");
@@ -49,11 +62,10 @@ public class OpenwikipediaApplication implements CommandLineRunner {
 			user.setPassword("1234danilo");
 			user.setUsername("danimaster");
 			Set<Role> role = new HashSet<>();
-			role.add(r_user);
+			role.add(roleRepository.findByRole(ERole.ROLE_USER));
 			user.setRoles(role);
 
 			userRepository.save(user);
-			roleRepository.save(r_user);
 		}
 	}
 }

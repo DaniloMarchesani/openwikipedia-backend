@@ -3,6 +3,7 @@ package me.danilomarchesani.openwikipedia.errors;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -48,6 +49,12 @@ public class GlobalApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleDailyArticleNotFoundException(DailyArticleNotFoundException ex) {
         logger.error("Error occurred: " + ex.getMessage() + " Caused by" + ex.getCause());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentials(BadCredentialsException ex) {
+        logger.error("error bad credentials exception: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ERRORE: " + ex.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)

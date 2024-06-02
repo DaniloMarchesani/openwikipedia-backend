@@ -1,5 +1,19 @@
 package me.danilomarchesani.openwikipedia.controllers;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import jakarta.validation.Valid;
 import me.danilomarchesani.openwikipedia.model.ERole;
 import me.danilomarchesani.openwikipedia.model.Role;
@@ -16,57 +30,76 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v0.1.0/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
-    private AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @Autowired
-    private RoleService roleService;
+    RoleService roleService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    PasswordEncoder encoder;
 
     @Autowired
-    private JwtUtils jwtUtils;
+    JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
+    Authentication authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String jwt = jwtUtils.generateJwtToken(authentication);
+
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    List<String> roles = userDetails.getAuthorities().stream()
+        .map(item -> item.getAuthority())
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(new JwtResponse(jwt,
+        userDetails.getId(),
+        userDetails.getUsername(),
+        userDetails.getEmail(),
+        roles));
+  }
+    /* public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
 
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
-
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             Set<String> roles = userDetails.getAuthorities().stream().map(role -> role.getAuthority()).collect(Collectors.toSet());
 
             return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getEmail(), userDetails.getId(), roles));
-        } catch (RuntimeException e) {
+        } catch (BadCredentialsException ex) {
+            throw new BadCredentialsException(ex.getMessage());
+        }
+        catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
+    } */
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws RuntimeException {
@@ -84,26 +117,30 @@ public class AuthController {
             User user = new User();
             user.setUsername(registerRequest.getUsername());
             user.setEmail(registerRequest.getEmail());
-            user.setPassword(registerRequest.getPassword());
-            user.setRoles(registerRequest.getRoles());
+            System.out.println("PASSWORD IN ENTRATA: " + registerRequest.getPassword());
+            var hashedPassword = encoder.encode(registerRequest.getPassword());
+            System.out.println("Password SALVATA: " + hashedPassword);
+            user.setPassword(hashedPassword);
             user.setFirstname(registerRequest.getFirstname());
             user.setLastname(registerRequest.getLastname());
             user.setAddress(registerRequest.getAddress());
 
-            Set<Role> roles = new HashSet<>();
+            Set<Role> roles = Stream.of(roleService.findByRole(ERole.ROLE_USER)).collect(Collectors.toSet());
+            user.setRoles(roles);
 
             if (user.getRoles() == null) {
                 Role role = roleService.findByRole(ERole.ROLE_USER);
-                user.getRoles().add(role);
+                roles.add(role);
+                user.setRoles(roles);
             } else {
                 user.getRoles().forEach(role -> {
                     switch (role.toString()) {
-                        case "admin":
+                        case "ROLE_ADMIN":
                             Role adminRole = roleService.findByRole(ERole.ROLE_ADMIN);
                             roles.add(adminRole);
                             break;
 
-                        case "author":
+                        case "ROLE_AUTHOR":
                             Role authorRole = roleService.findByRole(ERole.ROLE_AUTHOR);
                             roles.add(authorRole);
                             break;

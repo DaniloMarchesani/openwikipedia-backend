@@ -22,14 +22,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserByIdController(@Valid @RequestParam String id) throws Exception {
+    @GetMapping("/id/{id}")
+    public ResponseEntity<User> getUserByIdController(@Valid @PathVariable String id) throws Exception {
             User userToFind = userService.findUserById(id);
             return ResponseEntity.ok(userToFind);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<User> getUserByUsername(@Valid @RequestParam String username) throws Exception {
+    public ResponseEntity<User> getUserByUsername(@Valid @PathVariable String username) throws Exception {
         User user = userService.findByUsername(username);
         return ResponseEntity.ok(user);
     }
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@Valid @RequestParam String id) throws Exception {
+    public ResponseEntity<String> deleteUser(@Valid @PathVariable String id) throws Exception {
         userService.deleteUserById(id);
         return ResponseEntity.ok("User deleted successfully: " + id);
     }

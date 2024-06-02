@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -32,7 +33,6 @@ public class User {
 
     private String firstname;
     private String lastname;
-    @DBRef
     private Address address;
 
     @NotBlank
@@ -41,6 +41,6 @@ public class User {
 
     private Date createdAt = new Date();
     private boolean isEnabled = true;
-    @DBRef
+
     private Set<Role> roles;
 }
