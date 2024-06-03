@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * This Methos has beed created for parse a jwt and return only the String of the token.
+     * This Method has been created for parse a jwt and return only the String of the token.
      * @author Danilo M.
      * @return String
      * @param request request

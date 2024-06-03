@@ -85,11 +85,11 @@ public class WebSecurityConfig {
         http.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(
-                request -> request.requestMatchers("/api/").permitAll()
+                request -> request
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/user/**").permitAll()
-                        .requestMatchers("/api/article/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers("/api/article/**").authenticated()
+                        .anyRequest().authenticated()
 
         );
 

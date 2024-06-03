@@ -20,7 +20,8 @@ public class UserService {
 
     public User createUser(User user) throws Exception {
         try {
-            return userRepository.save(user);
+            userRepository.save(user);
+            return user;
         } catch (UserNotCreatedException e) {
             throw new UserNotCreatedException("An Error occurred while creating the new user: " + e.getMessage());
         } catch (Exception e) {
