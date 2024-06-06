@@ -29,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -92,6 +93,16 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
 
         );
+
+        http.cors(cors -> {
+            cors.configurationSource(request -> {
+                CorsConfiguration corsConfig = new CorsConfiguration();
+                corsConfig.addAllowedOrigin("*");
+                corsConfig.addAllowedMethod("*");
+                corsConfig.addAllowedHeader("*");
+                return corsConfig;
+            });
+        });
 
         http.authenticationProvider(authenticationProvider());
 
