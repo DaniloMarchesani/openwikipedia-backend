@@ -6,8 +6,11 @@ import me.danilomarchesani.openwikipedia.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -22,11 +25,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/")
+    public ResponseEntity<User> getUserController() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalUser = auth.getName();
+            return ResponseEntity.ok(userService.findByUsername(currentPrincipalUser));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @GetMapping("/id/{id}")
     public ResponseEntity<User> getUserByIdController(@Valid @PathVariable String id) throws Exception {
             User userToFind = userService.findUserById(id);
             return ResponseEntity.ok(userToFind);
     }
+
 
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserByUsername(@Valid @PathVariable String username) throws Exception {

@@ -1,5 +1,6 @@
 package me.danilomarchesani.openwikipedia.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,6 +29,7 @@ public class User {
     @NotBlank
     @Size(min = 3, max = 10)
     private String username;
+    @JsonIgnore
     @Size(min = 6, max = 15)
     private String password;
 
