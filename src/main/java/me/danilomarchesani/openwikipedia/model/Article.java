@@ -21,8 +21,11 @@ public class Article {
 
     private String title;
     private String content;
-    private Date savedOnDate;
-    private Date lastModifiedDate;
+    private Date savedOnDate = new Date();
+    private Date lastModifiedDate = new Date();
+
+
+    private String userId;
 
     @DBRef
     private Set<ArticleHistory> history;

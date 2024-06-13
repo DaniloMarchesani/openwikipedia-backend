@@ -1,8 +1,11 @@
 package me.danilomarchesani.openwikipedia.service;
 
 import me.danilomarchesani.openwikipedia.errors.ArticleNotFoundException;
+import me.danilomarchesani.openwikipedia.errors.UserNotFoundException;
 import me.danilomarchesani.openwikipedia.model.Article;
+import me.danilomarchesani.openwikipedia.model.User;
 import me.danilomarchesani.openwikipedia.repository.ArticleRepository;
+import me.danilomarchesani.openwikipedia.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,21 @@ import java.util.stream.Stream;
 public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Article> getAllArticlesOfUsername(String username) throws Exception {
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+            if(!user.isPresent()) throw new UserNotFoundException("User with username: " + username + " not found!");
+            Optional<List<Article>> articles = articleRepository.findByUserId(user.get().getId());
+            if(!articles.isPresent()) throw new ArticleNotFoundException("Articles of user: " + username + " not found any!");
+            return articles.get();
+        } catch (Exception e) {
+            throw new Exception("Error occurred while fetching all user articles: " + e.getMessage());
+        }
+    }
 
     public Article getArticleByTitle(String articleTitle) throws Exception {
         try{

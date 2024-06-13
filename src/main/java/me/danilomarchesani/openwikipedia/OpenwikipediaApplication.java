@@ -1,5 +1,6 @@
 package me.danilomarchesani.openwikipedia;
 
+import me.danilomarchesani.openwikipedia.model.Article;
 import me.danilomarchesani.openwikipedia.model.ERole;
 import me.danilomarchesani.openwikipedia.model.Role;
 import me.danilomarchesani.openwikipedia.model.User;
@@ -12,14 +13,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootApplication
 public class OpenwikipediaApplication implements CommandLineRunner {
 
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+
+		return builder.build();
+	}
 	@Autowired
 	private final static Logger logger = LoggerFactory.getLogger(OpenwikipediaApplication.class);
 
@@ -59,8 +67,9 @@ public class OpenwikipediaApplication implements CommandLineRunner {
 			user.setFirstname("Danilo");
 			user.setLastname("Marchesani");
 			user.setCreatedAt(new Date());
-			user.setPassword("1234danilo");
-			user.setUsername("danimaster");
+
+			user.setPassword("12345678");
+			user.setUsername("danilo95");
 			Set<Role> role = new HashSet<>();
 			role.add(roleRepository.findByRole(ERole.ROLE_USER));
 			user.setRoles(role);

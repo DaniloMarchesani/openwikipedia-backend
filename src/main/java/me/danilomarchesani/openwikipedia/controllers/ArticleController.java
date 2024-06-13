@@ -7,8 +7,11 @@ import me.danilomarchesani.openwikipedia.service.ArticleHistoryService;
 import me.danilomarchesani.openwikipedia.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -21,6 +24,17 @@ public class ArticleController {
 
     @Autowired
     private ArticleHistoryService articleHistoryService;
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Article>> getAllUserArticles() throws Exception {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String currentUser = auth.getName();
+            return ResponseEntity.ok(articleService.getAllArticlesOfUsername(currentUser));
+        } catch(Exception e) {
+            throw new Exception("Error occurred: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/{title}")
     public ResponseEntity<Article> getArticleByTitle(@Valid @RequestParam String title) throws Exception {
