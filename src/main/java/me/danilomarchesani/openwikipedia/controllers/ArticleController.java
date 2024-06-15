@@ -37,7 +37,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{title}")
-    public ResponseEntity<Article> getArticleByTitle(@Valid @RequestParam String title) throws Exception {
+    public ResponseEntity<Article> getArticleByTitle(@Valid @PathVariable String title) throws Exception {
         Article article = articleService.getArticleByTitle(title);
         return ResponseEntity.ok(article);
     }
