@@ -19,7 +19,7 @@ public class ArticleHistoryService {
     public Set<ArticleHistory> getArticleHistory(Article article) {
         if (!articleHistoryRepository.existsById(article.getId()))
             throw new ArticleHistoryNotFoundException("History of the article: " + article.getTitle() + " not found or possible never existed an history of this article.");
-        return articleHistoryRepository.findByArticle(article);
+        return articleHistoryRepository.findByArticleId(article.getId());
     }
 
     /**
@@ -32,7 +32,7 @@ public class ArticleHistoryService {
     public ArticleHistory createArticleHistory(Article article) throws Exception {
         try {
             ArticleHistory snapshot = new ArticleHistory();
-            snapshot.setArticle(article);
+            snapshot.setArticleId(article.getId());
             articleHistoryRepository.save(snapshot);
             return snapshot;
         } catch (Exception e) {

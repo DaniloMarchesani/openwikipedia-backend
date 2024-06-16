@@ -17,12 +17,9 @@ public class ArticleHistory {
     @Id
     private String id;
 
-    @DBRef
-    private Article article;
+    private String title;
+    private String content;
 
-    @DBRef
-    private User modifiedByUser;
-    private Date modifiedAt;
-    private String previousContentState;
-
+    private String articleId;
+    private Date modifiedAt = new Date();
 }

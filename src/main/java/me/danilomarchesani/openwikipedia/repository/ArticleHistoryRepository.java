@@ -10,5 +10,5 @@ import java.util.Set;
 
 @Repository
 public interface ArticleHistoryRepository extends MongoRepository<ArticleHistory, String> {
-    Set<ArticleHistory> findByArticle(Article article);
+    Set<ArticleHistory> findByArticleId(String id);
 }

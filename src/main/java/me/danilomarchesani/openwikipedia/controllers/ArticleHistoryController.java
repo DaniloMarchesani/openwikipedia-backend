@@ -21,8 +21,8 @@ public class ArticleHistoryController {
     private ArticleService articleService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getArticleHistory(@Valid @RequestParam String id) throws Exception {
-        Set<ArticleHistory> articleHistories = articleHistoryRepository.findByArticle(articleService.getArticleById(id));
+    public ResponseEntity<?> getArticleHistory(@Valid @PathVariable String id) throws Exception {
+        Set<ArticleHistory> articleHistories = articleHistoryRepository.findByArticleId(articleService.getArticleById(id).getId());
         return ResponseEntity.ok(articleHistories);
     }
 

@@ -36,9 +36,9 @@ public class ArticleController {
         }
     }
 
-    @GetMapping("/{title}")
-    public ResponseEntity<Article> getArticleByTitle(@Valid @PathVariable String title) throws Exception {
-        Article article = articleService.getArticleByTitle(title);
+    @GetMapping("/{id}")
+    public ResponseEntity<Article> getArticleByTitle(@Valid @PathVariable String id) throws Exception {
+        Article article = articleService.getArticleById(id);
         return ResponseEntity.ok(article);
     }
 
@@ -56,12 +56,12 @@ public class ArticleController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Article> updateArticle(@Valid @RequestBody Article updatedArticle, @RequestParam String id) throws Exception {
+    public ResponseEntity<Article> updateArticle(@Valid @RequestBody Article updatedArticle, @PathVariable String id) throws Exception {
         ArticleHistory snapshot = articleHistoryService.createArticleHistory(articleService.getArticleById(id));
         Article article = articleService.updateArticle(id, updatedArticle);
         return ResponseEntity.ok(article);
-    }
 
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteArticle(@RequestParam String id) throws Exception {
         articleService.deleteArticle(id);

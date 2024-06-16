@@ -80,6 +80,7 @@ public class ArticleService {
             article.setSavedOnDate(new Date());
             article.setContent(articleUpdated.getContent());
             article.setLastModifiedDate(new Date());
+            article.setUserId(articleUpdated.getUserId());
 
             articleRepository.save(article);
 
