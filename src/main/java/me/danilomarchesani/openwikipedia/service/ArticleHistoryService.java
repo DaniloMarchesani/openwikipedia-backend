@@ -33,6 +33,8 @@ public class ArticleHistoryService {
         try {
             ArticleHistory snapshot = new ArticleHistory();
             snapshot.setArticleId(article.getId());
+            snapshot.setContent(article.getContent());
+            snapshot.setTitle(article.getTitle());
             articleHistoryRepository.save(snapshot);
             return snapshot;
         } catch (Exception e) {
