@@ -57,12 +57,12 @@ public class ArticleHistoryService {
     /**
      * THis method deletes all History snapshots of an article.
      *
-     * @param ids
+     * @param idd
      * @author Danilo M. 31/05/2024
      */
-    public void deleteAllArticleHisotries(List<String> ids) throws Exception {
+    public void deleteAllArticleHisotries(String id) throws Exception {
         try {
-            articleHistoryRepository.deleteAllById(ids);
+            articleHistoryRepository.deleteAllByArticleId(id);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

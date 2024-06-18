@@ -63,8 +63,9 @@ public class ArticleController {
 
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteArticle(@RequestParam String id) throws Exception {
+    public ResponseEntity<String> deleteArticle(@PathVariable String id) throws Exception {
         articleService.deleteArticle(id);
+        articleHistoryService.deleteAllArticleHisotries(id);
         return ResponseEntity.ok("Article deleted: " + id);
     }
 }

@@ -11,4 +11,6 @@ import java.util.Set;
 @Repository
 public interface ArticleHistoryRepository extends MongoRepository<ArticleHistory, String> {
     Set<ArticleHistory> findByArticleId(String id);
+
+    void deleteAllByArticleId(String id);
 }
