@@ -57,7 +57,7 @@ public class ArticleHistoryService {
     /**
      * THis method deletes all History snapshots of an article.
      *
-     * @param idd
+     * @param id
      * @author Danilo M. 31/05/2024
      */
     public void deleteAllArticleHisotries(String id) throws Exception {
