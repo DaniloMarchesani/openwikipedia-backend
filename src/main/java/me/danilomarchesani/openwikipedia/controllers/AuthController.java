@@ -117,9 +117,7 @@ public class AuthController {
             User user = new User();
             user.setUsername(registerRequest.getUsername());
             user.setEmail(registerRequest.getEmail());
-            System.out.println("PASSWORD IN ENTRATA: " + registerRequest.getPassword());
             var hashedPassword = encoder.encode(registerRequest.getPassword());
-            System.out.println("Password SALVATA: " + hashedPassword);
             user.setPassword(hashedPassword);
             user.setFirstname(registerRequest.getFirstname());
             user.setLastname(registerRequest.getLastname());
